@@ -1,0 +1,261 @@
+@charset "UTF-8";
+
+
+:root{
+    --red: #b42121;
+    --green: #18b738;
+}
+
+/* Hero Section */
+
+.hero-section{
+    display: flex;
+    justify-content: center;
+}
+.hero-content{
+    width: 80vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 7em;
+}
+.hero-text{
+    width: 25em;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    animation: fade-in 1s ease-in-out;
+}
+.hero-text h1{
+    font-size: 3rem;
+    font-weight: 600;
+    line-height: 1;
+}
+.hero-text p{
+    font-size: 0.9rem;
+}
+.hero-img{
+    position: relative;
+    height: 26em;
+    width: 26em;
+    border-radius: 50% 50% 50% 0;
+    background-color: var(--red);
+    animation: fade-fast 0.5s ease-in-out 1s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+}
+.hero-img img{
+    position: absolute;
+    height: 26em;
+    border-radius: 50% 50% 50% 0;
+    animation: slide 0.2s linear 1.5s;
+    animation-fill-mode: forwards;
+    bottom: 0px;
+    left: 0px;
+}
+
+@keyframes fade-in{
+    0%{
+        transform: translateY(-5em);
+        opacity: 0;
+    }
+    100%{
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+@keyframes fade-fast{
+    0%{
+        transform: translateY(-3em) translateX(3em);
+        opacity: 0;
+    }
+    100%{
+        transform: translateY(0em) translateX(0em);
+        opacity: 1;
+    }
+}
+@keyframes slide{
+    0%{
+        bottom: 0px;
+        left: 0px;
+    }
+    100%{
+        bottom: 10px;
+        left: 10px;
+    }
+}
+
+/* Divider */
+
+.divider{
+    width: 90vw;
+    height: 15em;
+    background-image: linear-gradient(90deg, #e94e4e, var(--red));
+    color: #fff;
+    margin: 10em 0 8em 0;
+    border-top-right-radius: 5em;
+    padding-left: 10vw;
+    display: flex;
+    align-items: center;
+}
+.divider-content{
+    display: flex;
+    gap: 5em;
+    align-items: center;
+}
+.divider-text{
+    width: 42em;
+}
+.divider-text h2{
+    font-size: 1.8rem;
+    margin-bottom: 0.3em;
+}
+.divider-text p{
+    font-size: 0.9rem;
+}
+
+/* 4 column Cards layout */
+
+.process-section{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5em;
+}
+.process-content{
+    display: flex;
+    flex-direction: column;
+    gap: 4em;
+    width: 80vw;
+}
+.process-text h2{
+    font-size: 1.8rem;
+    margin-bottom: 0.5em;
+}
+.process-text p{
+    font-size: 0.9rem;
+    color: #5a5a5a;
+}
+.cards-container-4c{
+    display: flex;
+    gap: 1.5em;
+}
+.card4c{
+    width: calc(20vw - 1.5em);
+    height: 12em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+.card4c div{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 1.9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card4c h3{
+    font-size: 1.3rem;
+}
+.card4c p{
+    font-size: 0.9rem;
+    color: #5a5a5a;
+}
+.f-1 div{
+    color: #5b00a0;
+    background-color: rgba(40, 0, 160, 0.2);
+}
+.f-2 div{
+    color: rgb(227, 201, 0);
+    background-color: rgba(227, 201, 0, 0.2);
+}
+.f-3 div{
+    color: rgb(0, 234, 255);;
+    background-color: rgba(0, 234, 255, 0.2);
+}
+.f-4 div{
+    color: rgb(211, 53, 0);
+    background-color: rgba(211, 53, 0, 0.2);
+}
+
+/* 3 column card layout */
+
+.article-section{
+    display: flex;
+    justify-content: center;
+}
+.article-container{
+    width: 80vw;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+.heading{
+    display: flex;
+    justify-content: space-between;
+}
+.heading h3,
+.heading p{
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+.cards-container-3c{
+    display: flex;
+    justify-content: space-between;
+}
+.card3c{
+    position: relative;
+    width: 24vw;
+    height: 30em;
+    overflow: hidden;
+    border-radius: 0.5em
+}
+.card3c img{
+    height: 17em;
+}
+.card-text{
+    position: absolute;
+    bottom: 0;
+    background-color: #fff;
+    width: 100%;
+    height: 14em;
+    border-radius: 0.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding: 1em;
+}
+.card-text p{
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.fa-calendar{
+    color: var(--green);
+}
+.card-text h3{
+    font-size: 1.3rem;
+}
+.card-text h6{
+    font-size: 0.9rem;
+    color: #5a5a5a;
+    margin-top: -6px;
+    margin-bottom: 0.5em;
+}
+.card-text h5{
+    font-size: 0.9rem;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.fa-sun{
+    color: #ffcc00;
+}
+.t-1 img{
+    width: 100%;
+    height: auto;
+    margin-top: -50px;
+}
