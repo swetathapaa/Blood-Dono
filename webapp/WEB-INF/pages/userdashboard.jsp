@@ -1,70 +1,113 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.blooddono.model.DonorModel" %>
+
+<%
+    DonorModel user = (DonorModel) request.getAttribute("user");
+    String requestStatus = (String) request.getAttribute("requestStatus");
+
+    if (user == null || !"user".equalsIgnoreCase(user.getRole())) {
+        response.sendRedirect(request.getContextPath() + "/login");
+        return;
+    }
+
+    String errorMessage = (String) request.getAttribute("error");
+%>
+
 <!DOCTYPE html>
-<html>
-  <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Dashboard - Blood Dono</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dashboard.css" />
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>User Profile - Blood Donor</title>
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/dashboard.css" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const errorMessage = document.querySelector('.error-message');
+            if (errorMessage) {
+                document.querySelector('input[name="currentPassword"]').value = '';
+                document.querySelector('input[name="password"]').value = '';
+                document.querySelector('input[name="retypePassword"]').value = '';
+            }
+        });
+
+        function validateForm() {
+            const currentPassword = document.querySelector('input[name="currentPassword"]').value;
+            const newPassword = document.querySelector('input[name="password"]').value;
+            const confirmPassword = document.querySelector('input[name="retypePassword"]').value;
+
+            if (newPassword && !currentPassword) {
+                alert("Please enter your current password to change it.");
+                return false;
+            }
+            if (newPassword && newPassword !== confirmPassword) {
+                alert("New passwords do not match. Please try again.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </head>
 <body>
-  <div class="bubble bubble1"></div>
-  <div class="bubble bubble2"></div>
-  <div class="bubble bubble3"></div>
 
-  <div class="container">
-    <div class="left-panel">
-      <div class="left-panel-content">
-        <h2>Welcome!</h2>
-        <p>Manage and update your profile here.</p>
-        <div class="catchy-text">Keep your info up to date to help save lives!</div>
-      </div>
-    </div>
+<%@ include file="nav.jsp" %>
 
-    <div class="right-panel">
-      <form id="profileForm" action="${pageContext.request.contextPath}/updateProfile" method="post" class="form-area">
-        <h3>Update Profile</h3>
-
-        <input type="text" name="first_name" value="${user.firstName}" placeholder="First Name" required />
-        <input type="text" name="last_name" value="${user.lastName}" placeholder="Last Name" required />
-        <input type="text" name="blood_group" value="${user.bloodGroup}" placeholder="Blood Group (e.g. A+)" required />
-        <input type="date" name="dob" value="${user.dob}" required />
-
-        <select name="gender" required>
-          <option value="" disabled>Select Gender</option>
-          <option value="male"   ${user.gender == 'male'   ? 'selected' : ''}>Male</option>
-          <option value="female" ${user.gender == 'female' ? 'selected' : ''}>Female</option>
-          <option value="other"  ${user.gender == 'other'  ? 'selected' : ''}>Other</option>
-        </select>
-
-        <input type="email" name="email" value="${user.email}" placeholder="Email Address" readonly />
-        <input type="tel" name="contact" value="${user.contact}" placeholder="Contact Number"
-               pattern="[0-9]{10}" maxlength="10" required />
-
-        <input type="password" id="password" name="password" placeholder="New Password (optional)" />
-        <input type="password" id="retypePassword" name="retypePassword" placeholder="Confirm New Password" />
-
-        <div class="button-wrapper">
-          <button type="submit">Update Profile</button>
+<div class="profile-container">
+    <!-- Left Panel -->
+    <div class="profile-left">
+        <div class="profile-pic">
+            <img src="<%= request.getContextPath() %>/user-profile?pic=true" alt="Profile Picture" />
         </div>
-      </form>
+        <h3><%= user.getFirstName() %> <%= user.getLastName() %></h3>
+        <p>Email: <%= user.getEmail() %></p>
+        <p>Blood Group: <%= user.getBloodGroup() %></p>
+        <p>Date Of Birth: <%= user.getDob() %></p>
+        <p>Gender: <%= user.getGender() %></p>
+        <p>Contact: <%= user.getContact() %></p>
+
+        <!-- 🔥 Request Status -->
+        <p style="margin-top: 10px; font-weight: bold;">Request Status:
+            <span style="color: <%= "Approved".equalsIgnoreCase(requestStatus) ? "green" : 
+                                    "Rejected".equalsIgnoreCase(requestStatus) ? "red" : 
+                                    "orange" %>;">
+                <%= requestStatus != null ? requestStatus : "No Requests" %>
+            </span>
+        </p>
     </div>
-  </div>
 
-  <script>
-    document.getElementById("profileForm").addEventListener("submit", function(event) {
-      const password = document.getElementById("password").value.trim();
-      const retypePassword = document.getElementById("retypePassword").value.trim();
+    <!-- Center Panel -->
+    <div class="profile-center">
+        <h2>User Profile</h2>
 
-      // Only validate if user is trying to change password
-      if (password || retypePassword) {
-        if (password !== retypePassword) {
-          alert("Passwords do not match. Please try again.");
-          event.preventDefault();
-        }
-      }
-    });
-  </script>
+        <% if (errorMessage != null) { %>
+            <div class="error-message" style="color: red; margin-bottom: 10px;">
+                <%= errorMessage %>
+            </div>
+        <% } %>
+
+        <form action="<%= request.getContextPath() %>/updateProfile" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <input type="text" name="firstName" value="<%= user.getFirstName() %>" required />
+            <input type="text" name="lastName" value="<%= user.getLastName() %>" required />
+            <input type="text" name="bloodGroup" value="<%= user.getBloodGroup() %>" required />
+            <input type="date" name="dateOfBirth" value="<%= user.getDob() %>" required />
+            
+            <select name="gender" required>
+                <option value="male" <%= "male".equals(user.getGender()) ? "selected" : "" %>>Male</option>
+                <option value="female" <%= "female".equals(user.getGender()) ? "selected" : "" %>>Female</option>
+                <option value="other" <%= "other".equals(user.getGender()) ? "selected" : "" %>>Other</option>
+            </select>
+
+            <input type="tel" name="contact" value="<%= user.getContact() %>" pattern="[0-9]{10}" required />
+
+            <h3>Change Password</h3>
+            <input type="password" name="currentPassword" placeholder="Enter Current Password" />
+            <input type="password" name="password" placeholder="New Password (optional)" />
+            <input type="password" name="retypePassword" placeholder="Confirm New Password" />
+
+            <input type="file" name="profile_pic" accept="image/*" />
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</div>
+
 </body>
 </html>

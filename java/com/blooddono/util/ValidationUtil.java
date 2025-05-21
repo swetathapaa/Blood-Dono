@@ -35,14 +35,16 @@ public class ValidationUtil {
 
     // 6. Validate if a number is of 10 digits and starts with 98
     public static boolean isValidPhoneNumber(String number) {
-        return number != null && number.matches("^98\\d{8}$");
+        return number != null && number.matches("^9\\d{9}$");
     }
 
     // 7. Validate if a password is composed of at least 1 capital letter, 1 number, and 1 symbol
     public static boolean isValidPassword(String password) {
-        String passwordRegex = "^(?=.[A-Z])(?=.\\d)(?=.[@$!%?&])[A-Za-z\\d@$!%*?&]{8,}$";
-        return password != null && password.matches(passwordRegex);
+        // At least 8 characters, one uppercase, one lowercase, one number, and one special character
+        return password != null && password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&#+^])[A-Za-z\\d@$!%*?&#+^]{8,}$");
     }
+
+
 
     // 8. Validate if a Part's file extension matches with image extensions (jpg, jpeg, png, gif)
     public static boolean isValidImageExtension(Part imagePart) {

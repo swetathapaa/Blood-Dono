@@ -10,10 +10,9 @@ import java.sql.ResultSet;
 
 public class DonorServiceImpl implements DonorService {
 
-    @Override
     public DonorModel authenticateDonor(String email, String password) {
         DonorModel donor = null;
-        String sql = "SELECT * FROM donor WHERE email = ?";
+        String sql = "SELECT userID, firstName, lastName, bloodGroup, dateOfBirth, gender, email, contact, password, profile_pic, role FROM user WHERE email = ?";  // Updated 'userID'
 
         try (Connection conn = DbConfig.getDbConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -21,20 +20,27 @@ public class DonorServiceImpl implements DonorService {
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    String encrypted = rs.getString("password");
-                    String decrypted = PasswordUtil.decrypt(encrypted, email);
+                    String encrypted = rs.getString("password");  // Assuming 'password' column name
+                    String decrypted = PasswordUtil.decrypt(encrypted, email);  // Decrypt using email as a key
 
                     if (decrypted != null && decrypted.equals(password)) {
+                        byte[] profilePic = rs.getBytes("profile_pic");  // Assuming 'profile_pic' column name
+                        String role = rs.getString("role");  // Assuming 'role' column is present in the table
+                        int userId = rs.getInt("userID");  // Fetch the userID with the correct column name
+
                         donor = new DonorModel(
-                            rs.getString("first_name"),
-                            rs.getString("last_name"),
-                            rs.getString("blood_group"),
-                            rs.getDate("dob").toLocalDate(),
+                            rs.getString("firstName"),
+                            rs.getString("lastName"),
+                            rs.getString("bloodGroup"),
+                            rs.getDate("dateOfBirth").toLocalDate(),
                             rs.getString("gender"),
                             rs.getString("email"),
                             rs.getString("contact"),
-                            encrypted
+                            decrypted,  // Use the decrypted password
+                            profilePic,
+                            role
                         );
+                        donor.setUserId(userId);  // Set the userID here
                     }
                 }
             }
